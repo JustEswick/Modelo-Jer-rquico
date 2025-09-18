@@ -16,6 +16,7 @@ pip install uv
 uv pip install numpy svgpathtools tqdm matplotlib
 
 - Instala pytorch por separado, importante revisar la versión de cuda necesaria, si es de generación 20/30/40... usar la version cu121
+  
 - si no se tiene una tarjeta nvidia, por defecto usara el CPU
 uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 
