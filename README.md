@@ -41,6 +41,6 @@ python generate_final_plot.py
   
 python verify_data.py
 
-- El script model.py sirve para comprobar que la entrada es correcta
+- El script model.py sirve para comprobar que la entrada de datos es correcta
   
 python model.py
