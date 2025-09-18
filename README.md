@@ -31,6 +31,7 @@ python train.py
 
 # Generar una visualziación final de los resultados obtenidos
 python generate_final_plot.py
+
 ----------------------------------------------------------------------
 - El script verify_data carga y dibuja los datos del archivo JSON asi se visualiza si el archivo está siendo generado correctamente
 python verify_data.py
