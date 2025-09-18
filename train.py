@@ -34,57 +34,35 @@ def deltas_to_coordinates(delta_strokes, scale_factor):
 
 def visualize_reconstruction(model, dataloader, device, epoch, scale_factor):
     """
-    Versión CORREGIDA.
-    Genera y guarda una comparación visual del original vs. la reconstrucción.
+    VERSIÓN NUEVA: Incluye re-centrado post-proceso para eliminar el drift.
     """
-    model.eval() # Modo de evaluación
+    model.eval() # Modo evaluación
     with torch.no_grad():
         for data, mask in dataloader:
             data, mask = data.to(device), mask.to(device)
-            
             reconstruction = model(data, mask)
 
-            # --- PREPARACIÓN DE DATOS PARA PLOTEAR ---
-            # Mover a CPU y convertir a NumPy
+            # --- PREPARACIÓN DE DATOS ---
+            # Movemos todo a CPU y convertimos a numpy
             original_deltas_padded = data.squeeze(0).cpu().numpy()
             recon_deltas_padded = reconstruction.squeeze(0).cpu().numpy()
             mask_np = mask.squeeze(0).cpu().numpy()
 
-            # Función interna para convertir deltas a coordenadas absolutas
-            def get_abs_coords(deltas_padded, current_mask):
-                all_abs_strokes = []
-                # Iteramos sobre cada trazo
-                for i, stroke_deltas_padded in enumerate(deltas_padded):
-                    # Usamos la máscara para obtener solo los puntos reales del trazo
-                    num_real_points = int(current_mask[i].sum())
-                    stroke_deltas_real = stroke_deltas_padded[:num_real_points]
-                    
-                    # Des-normalizamos los deltas
-                    stroke_deltas_real[:, :2] *= scale_factor
-                    
-                    # La suma acumulada convierte los deltas en coordenadas absolutas
-                    # El primer delta de cada trazo ya contiene el "salto" desde el anterior
-                    stroke_abs = np.cumsum(stroke_deltas_real[:, :2], axis=0)
-                    all_abs_strokes.append(stroke_abs)
-                return all_abs_strokes
-
-            # Concatenamos todos los puntos para la conversión
-            # Esto es más simple y refleja cómo se crearon los datos
             flat_original_deltas = np.vstack([original_deltas_padded[i, :int(mask_np[i].sum())] for i in range(mask_np.shape[0])])
             flat_recon_deltas = np.vstack([recon_deltas_padded[i, :int(mask_np[i].sum())] for i in range(mask_np.shape[0])])
 
-            # Convertimos el flujo completo de deltas a coordenadas
-            original_coords_flat = np.cumsum(flat_original_deltas[:, :2] * scale_factor, axis=0)
-            recon_coords_flat = np.cumsum(flat_recon_deltas[:, :2] * scale_factor, axis=0)
+            original_coords = np.cumsum(flat_original_deltas[:, :2] * scale_factor, axis=0)
+            recon_coords = np.cumsum(flat_recon_deltas[:, :2] * scale_factor, axis=0)
 
+            # --- PASO DE ESTABILIZACIÓN: RE-CENTRAR AMBOS DIBUJOS ANTES DE PLOTEAR ---
+            # Se calcula el centro de cada dibujo y se le resta para forzarlo al origen.
+            original_coords -= np.mean(original_coords, axis=0)
+            recon_coords -= np.mean(recon_coords, axis=0)
+            
             # --- PLOTEO ---
             plt.figure(figsize=(8, 8))
-            
-            # Dibujamos el original en azul
-            plt.plot(original_coords_flat[:, 0], -original_coords_flat[:, 1], 'b-', alpha=0.7, label='Original')
-            # Dibujamos la reconstrucción en rojo
-            plt.plot(recon_coords_flat[:, 0], -recon_coords_flat[:, 1], 'r-', alpha=0.7, label='Reconstrucción')
-            
+            plt.plot(original_coords[:, 0], -original_coords[:, 1], 'b-', alpha=0.7, label='Original')
+            plt.plot(recon_coords[:, 0], -recon_coords[:, 1], 'r-', alpha=0.7, label='Reconstrucción')
             plt.title(f'Época {epoch}')
             plt.legend()
             plt.axis('equal')
