@@ -19,7 +19,7 @@ uv pip install numpy svgpathtools tqdm matplotlib
 - si no se tiene una tarjeta nvidia, por defecto usara el CPU
 uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 
---------------Flujo de ejecución de los scripts---------------------
+# --------------Flujo de ejecución de los scripts---------------------
 # Preprocesar el SVG para crear los datos de entrenamiento
 python preprocess_hierarchical.py
 
