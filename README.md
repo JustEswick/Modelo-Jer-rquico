@@ -38,7 +38,9 @@ python generate_final_plot.py
 
 ----------------------------------------------------------------------
 - El script verify_data carga y dibuja los datos del archivo JSON asi se visualiza si el archivo está siendo generado correctamente
+  
 python verify_data.py
 
 - El script model.py sirve para comprobar que la entrada es correcta
+  
 python model.py
