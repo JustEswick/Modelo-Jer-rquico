@@ -1,8 +1,8 @@
-#Primero crear y activar entorno virtual
+# Primero crear y activar entorno virtual
 
-#Crear el entorno virtual
+# Crear el entorno virtual
 python -m venv venv
-#Activar el entorno virtual
+# Activar el entorno virtual
 .\venv\Scripts\activate
 
 #Crea una carpeta llamada "frames"
