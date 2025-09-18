@@ -6,7 +6,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 from tqdm import tqdm
+from pathlib import Path
 
+frame_dir = Path.cwd() / "frames"
+
+frame_dir.mkdir(exist_ok=True)
+
+print(f"Carpeta creada: {frame_dir}")
 # Importamos nuestras clases personalizadas
 from dataset import StrokesDataset, collate_fn
 from model import HierarchicalDrawingModel
