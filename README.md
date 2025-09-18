@@ -25,12 +25,15 @@ uv pip install torch torchvision torchaudio --index-url https://download.pytorch
 python preprocess_hierarchical.py
 
 # Cargar y procesar los datos 
+
 python dataset.py
 
 # Entrenar el modelo
+
 python train.py
 
 # Generar una visualziación final de los resultados obtenidos
+
 python generate_final_plot.py
 
 ----------------------------------------------------------------------
