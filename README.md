@@ -5,8 +5,6 @@ python -m venv venv
 - Activar el entorno virtual
 .\venv\Scripts\activate
 
-# Crea una carpeta llamada "frames"
-
 # Instalar dependencias
 
 - Comienza instalando uv
